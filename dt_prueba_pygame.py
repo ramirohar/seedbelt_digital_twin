@@ -7,11 +7,17 @@ from controller import Arduino
 deg_to_px = 640/(360*5)
 
 pygame.init()
-ard = Arduino(port="COM11")
-# ard = None
+# ard = Arduino(port="COM11")
+ard = None
 # Crear la ventana
 ancho, alto = 640,480
-pantalla = pygame.display.set_mode((ancho, alto))
+
+# real_window_size = (512, 384)
+real_window_size = 200, 200
+virtual_surface = pygame.Surface((ancho, alto))
+
+pantalla = pygame.display.set_mode((real_window_size))
+
 pygame.display.set_caption("Animación con Pygame")
 
 fondo = pygame.image.load("fondo.png")
@@ -23,7 +29,6 @@ fondo_rect.center = (ancho // 2, alto // 2)  # empezar en el medio
 imagen = pygame.image.load("desfile.png")
 imagen_rect = imagen.get_rect()
 imagen_rect.center = (ancho // 2, alto // 2)  # empezar en el medio
-
 
 velocidad = 10
 
@@ -71,9 +76,11 @@ while True:
                     print(data, "is not a number")
 
     # Dibujar
-    pantalla.fill((30, 30, 30))  # fondo gris oscuro
-    pantalla.blit(fondo, fondo_rect)
-    pantalla.blit(imagen, imagen_rect)
+    
+    virtual_surface.blit(fondo, fondo_rect)
+    virtual_surface.blit(imagen, imagen_rect)
+    
+    pantalla.blit(pygame.transform.smoothscale(virtual_surface, real_window_size), (0,0))
     pygame.display.flip()
 
     # Controlar FPS
