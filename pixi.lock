@@ -167,6 +167,7 @@ environments:
       - conda: https://repo.prefix.dev/conda-forge/win-64/pygame-2.6.1-py313h12c88fb_0.conda
       - conda: https://repo.prefix.dev/conda-forge/noarch/pygments-2.19.2-pyhd8ed1ab_0.conda
       - conda: https://repo.prefix.dev/conda-forge/noarch/pyparsing-3.2.5-pyhcf101f3_0.conda
+      - conda: https://repo.prefix.dev/conda-forge/noarch/pyserial-3.5-pyhd8ed1ab_1.conda
       - conda: https://repo.prefix.dev/conda-forge/win-64/pyside6-6.9.2-py313hd8d090c_1.conda
       - conda: https://repo.prefix.dev/conda-forge/win-64/python-3.13.7-hdf00ec1_100_cp313.conda
       - conda: https://repo.prefix.dev/conda-forge/noarch/python-dateutil-2.9.0.post0-pyhe01879c_2.conda
@@ -2334,6 +2335,15 @@ packages:
   license_family: MIT
   size: 104044
   timestamp: 1758436411254
+- conda: https://repo.prefix.dev/conda-forge/noarch/pyserial-3.5-pyhd8ed1ab_1.conda
+  sha256: 48b51797fa1f5d8b2ed5d5f155a18993bb02616eef7a3b053a9125d7650bbe59
+  md5: 0127bf00a534e0c7b8075090f162bf82
+  depends:
+  - python >=3.9
+  license: BSD-3-Clause
+  license_family: BSD
+  size: 69380
+  timestamp: 1734140304034
 - conda: https://repo.prefix.dev/conda-forge/win-64/pyside6-6.9.2-py313hd8d090c_1.conda
   sha256: 9bf504c03ec61f59563cb0d09ada2578248ba55b8b72031b828a4921874e1fe7
   md5: 3bb818c7d17a8023321a8caeee86188c
