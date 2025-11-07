@@ -37,7 +37,7 @@ def apply_specs(spec):
     
     alpha = np.zeros_like(im)
     alpha[bg] = 0  
-    alpha[fg] = spec["intensity"]
+    alpha[fg] = min(spec["intensity"], 1)
     out = skcolor.gray2rgba(im, alpha)
 
     out = Image.fromarray((255 * out).astype(np.uint8), mode="RGBA")    
@@ -49,7 +49,7 @@ specs = sample_many(
             variety_dist=rv_discrete(values=([0, 1, 2], [1/2, 1/2, 0])),
             intensities=[
                 norm(loc=1, scale=0.01),
-                norm(loc=0.3, scale=0.1),
+                norm(loc=0.3, scale=0.01),
                 norm(loc=0, scale=0.1)
                 ],
             size_dist=uniform(loc=20, scale=5),
