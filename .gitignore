@@ -1,7 +1,0 @@
-
-# pixi environments
-.pixi
-*.egg-info
-test.py
-cmd_commands.py
-seed_trail.py
