@@ -1,4 +1,5 @@
 import time 
+
 def check_command(ard, comm, timeout = 2, verbose = True):
     t0 = time.time()
     while time.time() - t0 < timeout:

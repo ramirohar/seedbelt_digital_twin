@@ -1,8 +1,10 @@
 from scipy.stats import rv_discrete, rv_continuous
+from skimage import io as skio, color as skcolor, transform
+import numpy as np
 import pandas as pd
 
 
-def fila(
+def sample_single(
     rng=None,
     *,
     ocupation_dist: rv_discrete,
@@ -37,7 +39,7 @@ def sample_many(
     rotation_dist: rv_continuous,
 ):
     return pd.DataFrame(
-        fila(
+        sample_single(
             rng,
             ocupation_dist=ocupation_dist,
             variety_dist=variety_dist,
@@ -47,3 +49,19 @@ def sample_many(
         )
         for _ in range(N)
     )
+
+def apply_specs(im,spec):
+    if spec["ocupation"] == 0:
+        pass
+    im = transform.rotate(im, spec["rotation"])
+    im = transform.resize(im, (int(spec["size"]), int(spec["size"])))
+
+    fg = im > .1
+    bg = np.logical_not(fg)
+    
+    alpha = np.zeros_like(im)
+    alpha[bg] = 0  
+    alpha[fg] = min(spec["intensity"], 1)
+    out = skcolor.gray2rgba(im, alpha)
+    out = (255 * out).astype(np.uint8)    
+    return out
