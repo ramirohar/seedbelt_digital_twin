@@ -2,7 +2,31 @@ from scipy.stats import rv_discrete, rv_continuous
 from skimage import io as skio, color as skcolor, transform
 import numpy as np
 import pandas as pd
+from functools import partial
+def sample_generator(
+    rng=None,
+    *,
+    ocupation_dist: rv_discrete,
+    variety_dist: rv_discrete,
+    intensities: list[rv_continuous],
+    size_dist: rv_continuous,
+    rotation_dist: rv_continuous,
+):
+    ocupation_dist.random_state = rng
+    variety_dist.random_state = rng
+    for dist in intensities:
+        dist.random_state = rng 
+    size_dist.random_state = rng
+    rotation_dist.random_state =rng
 
+    return partial(sample_single, 
+            rng = None,
+            ocupation_dist=ocupation_dist,
+            variety_dist=variety_dist,
+            intensities=intensities,
+            size_dist=size_dist,
+            rotation_dist=rotation_dist,
+        )
 
 def sample_single(
     rng=None,

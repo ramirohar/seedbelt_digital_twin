@@ -1,19 +1,20 @@
 import pygame
 import sys
 from controller import Arduino
-from seed_trail import  apply_specs
-from spec_generation import sample_single
+from spec_generation import sample_single, apply_specs, sample_generator
 from scipy.stats import binom, uniform, norm, rv_discrete
 from functools import partial
 import numpy as np
 
 CAMERA_W, CAMERA_H = 640, 480
-REAL_WINDOW_SIZE = (512, 384)
+REAL_WINDOW_SIZE = (384, 288)
 N_NODES = 5
 TEMPLATE = np.load("TEMPLATE.npy")
-com = None
+com = "COM19"
+key_input = False
 
-sample_single = partial(sample_single,          
+sample_single = sample_generator(
+            rng = 1,           
             ocupation_dist=binom(n=1, p=1),
             variety_dist=rv_discrete(values=([0, 1, 2], [1/2, 1/2, 0])),
             intensities=[
@@ -32,11 +33,11 @@ def main(com = None, key_input = True):
     if key_input:
         velocidad = 10
     if com: 
-        ard = Arduino(com=com)
+        ard = Arduino(port=com)
     else:
         ard = None
     
-    belt = [Semilla(NODE_LENGTH*i) for i in range(5)]
+    belt = [Semilla(NODE_LENGTH*(4-i)) for i in range(5)]
 
     pygame.init()
 
@@ -76,10 +77,11 @@ def main(com = None, key_input = True):
         # Lectura de arduino
         if ard is not None:
             step = check_for_steps(ard)
-            print("Dephasing", step, "deg")
-            for semilla in belt:
-                semilla.update(step * deg_to_px)
-            
+            if step is not None:    
+                print("Dephasing", step, "deg")
+                for semilla in belt:
+                    semilla.update(step * deg_to_px)
+                
         # Dibujar
         virtual_surface.blit(fondo, fondo_rect)
         for semilla in belt:    
@@ -100,7 +102,7 @@ class Semilla():
         
     def reset(self, x):
         self.x = x
-        self.y = 240
+        self.y = int(CAMERA_H/2)
         spec = sample_single()
         im = apply_specs(TEMPLATE, spec)[:,:,:]
         self.surface = pygame.image.frombuffer(im.tobytes(), im.shape[1::-1], "RGBA")
@@ -110,27 +112,20 @@ class Semilla():
     
     def update(self, dx):
         self.x += dx
-        if self.x > 640:
-            self.reset(0)
+        if self.x > CAMERA_W:
+            self.reset(self.x - CAMERA_W)
         
 
-def read_ard_buffer(ard):
-    data = ard.get_data()
-    if data is None:
-        pass
-    else:
-        if data == "OK": 
-            pass
-        else:
-            return(data)
+
 
 def check_for_steps(ard):
-    data = read_ard_buffer(ard)
-    try:
-        steps = int(data)
-        return steps
-    except TypeError:
-        print(data, "invalid step size")
+    data = ard.get_data()
+    if data:
+        try:
+            steps = int(data)
+            return steps
+        except TypeError:
+            print(data, "invalid step size")
 
 if __name__ == "__main__":
-    main()
+    main(com, key_input)
