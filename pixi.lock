@@ -42,6 +42,7 @@ environments:
       - conda: https://repo.prefix.dev/conda-forge/win-64/freeglut-3.2.2-he0c23c2_3.conda
       - conda: https://repo.prefix.dev/conda-forge/win-64/freetype-2.14.1-h57928b3_0.conda
       - conda: https://repo.prefix.dev/conda-forge/win-64/fribidi-1.0.16-hfd05255_0.conda
+      - conda: https://repo.prefix.dev/conda-forge/noarch/fsspec-2025.10.0-pyhd8ed1ab_0.conda
       - conda: https://repo.prefix.dev/conda-forge/win-64/gdk-pixbuf-2.44.2-h1f5b9c4_0.conda
       - conda: https://repo.prefix.dev/conda-forge/win-64/giflib-5.2.2-h64bf75a_0.conda
       - conda: https://repo.prefix.dev/conda-forge/win-64/glslang-15.4.0-h5b34520_0.conda
@@ -149,7 +150,7 @@ environments:
       - conda: https://repo.prefix.dev/conda-forge/win-64/openjpeg-2.5.4-h24db6dd_0.conda
       - conda: https://repo.prefix.dev/conda-forge/win-64/openssl-3.5.3-h725018a_1.conda
       - conda: https://repo.prefix.dev/conda-forge/noarch/packaging-25.0-pyh29332c3_1.conda
-      - conda: https://repo.prefix.dev/conda-forge/win-64/pandas-2.3.2-py313hc90dcd4_0.conda
+      - conda: https://repo.prefix.dev/conda-forge/win-64/pandas-2.3.3-py313hc90dcd4_1.conda
       - conda: https://repo.prefix.dev/conda-forge/win-64/pango-1.56.4-h03d888a_0.conda
       - conda: https://repo.prefix.dev/conda-forge/noarch/parso-0.8.5-pyhcf101f3_0.conda
       - conda: https://repo.prefix.dev/conda-forge/win-64/pcre2-10.46-h3402e2f_0.conda
@@ -636,6 +637,15 @@ packages:
   license: LGPL-2.1-or-later
   size: 64394
   timestamp: 1757438741305
+- conda: https://repo.prefix.dev/conda-forge/noarch/fsspec-2025.10.0-pyhd8ed1ab_0.conda
+  sha256: df5cb57bb668cd5b2072d8bd66380ff7acb12e8c337f47dd4b9a75a6a6496a6d
+  md5: d18004c37182f83b9818b714825a7627
+  depends:
+  - python >=3.10
+  license: BSD-3-Clause
+  license_family: BSD
+  size: 146592
+  timestamp: 1761840236679
 - conda: https://repo.prefix.dev/conda-forge/win-64/gdk-pixbuf-2.44.2-h1f5b9c4_0.conda
   sha256: 49c7dd31199794106914528b53e8fda02575e1d7ce8d50639abc30b3602c55b1
   md5: cc7e5ba7f7d4eed80dcf8b38df66030a
@@ -2061,9 +2071,9 @@ packages:
   license_family: APACHE
   size: 62477
   timestamp: 1745345660407
-- conda: https://repo.prefix.dev/conda-forge/win-64/pandas-2.3.2-py313hc90dcd4_0.conda
-  sha256: d58849a03599e75d6ff9488e368a882aa37388e4b41478bbd3e3ea1179031fe0
-  md5: 35fe6d384d80f6e52c880c4abfc41a35
+- conda: https://repo.prefix.dev/conda-forge/win-64/pandas-2.3.3-py313hc90dcd4_1.conda
+  sha256: 4117c0ecf6ac2544d956038446df70884b48cf745cf50a28872cec54d189d6f8
+  md5: 72e76484d7629ec9217e71d9c6281e09
   depends:
   - numpy >=1.22.4
   - numpy >=1.23,<3
@@ -2076,41 +2086,41 @@ packages:
   - vc >=14.3,<15
   - vc14_runtime >=14.44.35208
   constrains:
-  - pytables >=3.8.0
-  - qtpy >=2.3.0
+  - xlrd >=2.0.1
   - numba >=0.56.4
-  - tabulate >=0.9.0
-  - blosc >=1.21.3
-  - fsspec >=2022.11.0
+  - zstandard >=0.19.0
   - odfpy >=1.4.1
+  - openpyxl >=3.1.0
+  - bottleneck >=1.3.6
+  - numexpr >=2.8.4
+  - tzdata >=2022.7
+  - html5lib >=1.1
   - gcsfs >=2022.11.0
-  - lxml >=4.9.2
+  - qtpy >=2.3.0
+  - xlsxwriter >=3.0.5
+  - s3fs >=2022.11.0
+  - tabulate >=0.9.0
+  - xarray >=2022.12.0
   - pandas-gbq >=0.19.0
+  - lxml >=4.9.2
   - pyqt5 >=5.15.9
+  - pyarrow >=10.0.1
+  - pytables >=3.8.0
+  - pyxlsb >=1.0.10
+  - pyreadstat >=1.2.0
+  - scipy >=1.10.0
+  - fsspec >=2022.11.0
   - matplotlib >=3.6.3
   - sqlalchemy >=2.0.0
-  - html5lib >=1.1
   - beautifulsoup4 >=4.11.2
-  - pyreadstat >=1.2.0
-  - zstandard >=0.19.0
-  - fastparquet >=2022.12.0
-  - scipy >=1.10.0
-  - xarray >=2022.12.0
-  - xlsxwriter >=3.0.5
-  - bottleneck >=1.3.6
-  - s3fs >=2022.11.0
+  - blosc >=1.21.3
   - psycopg2 >=2.9.6
-  - tzdata >=2022.7
-  - pyarrow >=10.0.1
-  - xlrd >=2.0.1
-  - pyxlsb >=1.0.10
-  - openpyxl >=3.1.0
-  - numexpr >=2.8.4
+  - fastparquet >=2022.12.0
   - python-calamine >=0.1.7
   license: BSD-3-Clause
   license_family: BSD
-  size: 13966284
-  timestamp: 1755779637297
+  size: 13956530
+  timestamp: 1759266304527
 - conda: https://repo.prefix.dev/conda-forge/win-64/pango-1.56.4-h03d888a_0.conda
   sha256: dcda7e9bedc1c87f51ceef7632a5901e26081a1f74a89799a3e50dbdc801c0bd
   md5: 452d6d3b409edead3bd90fc6317cd6d4

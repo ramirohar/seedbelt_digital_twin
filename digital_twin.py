@@ -1,17 +1,16 @@
 import pygame
 import sys
 from controller import Arduino
-from spec_generation import sample_single, apply_specs, sample_generator
+from spec_generation import apply_specs, sample_generator
 from scipy.stats import binom, uniform, norm, rv_discrete
-from functools import partial
 import numpy as np
 
 CAMERA_W, CAMERA_H = 640, 480
 REAL_WINDOW_SIZE = (384, 288)
 N_NODES = 5
 TEMPLATE = np.load("TEMPLATE.npy")
-com = "COM19"
-key_input = False
+com = None
+key_input = True
 
 sample_single = sample_generator(
             rng = 1,           
@@ -48,19 +47,19 @@ def main(com = None, key_input = True):
     pygame.display.set_caption("SEEDBELT DIGITAL TWIN")
 
     # Cargar fondo
-    fondo = pygame.image.load("fondo.png")
-    fondo_rect = fondo.get_rect()
-    fondo_rect.center = (CAMERA_W // 2, CAMERA_H // 2)  # empezar en el medio
+    fondo_original = pygame.image.load("fondo.png").convert()
+    fondo = pygame.transform.scale(fondo_original, (CAMERA_W, CAMERA_H))
 
     # Bucle pricle principal
     clock = pygame.time.Clock()
+    fps_timer = 0
     while True:
         for evento in pygame.event.get():
             if evento.type == pygame.QUIT:
                 pygame.quit()
                 sys.exit()
 
-        # Teclas presionadas
+        # # Teclas presionadas
         if key_input:
             teclas = pygame.key.get_pressed()
             if teclas[pygame.K_ESCAPE]:
@@ -74,27 +73,31 @@ def main(com = None, key_input = True):
                 for semilla in belt:
                     semilla.update(velocidad)
             
-        # Lectura de arduino
+        # # Lectura de arduino
         if ard is not None:
             step = check_for_steps(ard)
             if step is not None:    
-                print("Dephasing", step, "deg")
+                # print("Dephasing", step, "deg")
                 for semilla in belt:
                     semilla.update(step * deg_to_px)
-                
-        # Dibujar
-        virtual_surface.blit(fondo, fondo_rect)
+                    
+        # # Dibujar
+        virtual_surface.blit(fondo, (0,0))
         for semilla in belt:    
             semilla.draw(virtual_surface)
 
-        # Reescalar y mostrar
-        pantalla.blit(pygame.transform.smoothscale(virtual_surface, REAL_WINDOW_SIZE), (0,0))
+        # # Reescalar y mostrar
+        pantalla.blit(pygame.transform.scale(virtual_surface, REAL_WINDOW_SIZE), (0,0))
         pygame.display.flip()
 
-        # Controlar FPS
-        clock.tick(60)
-        fps = clock.get_fps()
-        print(fps)
+        # # Controlar FPS
+        dt = clock.tick(240)
+        fps_timer += dt
+        if fps_timer > 1000:
+            fps_display = clock.get_fps()
+            print(f"FPS: {fps_display:.1f}")
+            fps_timer = 0
+        
 
 class Semilla():
     def __init__(self, x):
@@ -103,13 +106,16 @@ class Semilla():
     def reset(self, x):
         self.x = x
         self.y = int(CAMERA_H/2)
-        spec = sample_single()
-        im = apply_specs(TEMPLATE, spec)[:,:,:]
+        self.spec = sample_single()
+        im = apply_specs(TEMPLATE, self.spec)[:,:,:]
         self.surface = pygame.image.frombuffer(im.tobytes(), im.shape[1::-1], "RGBA")
 
     def draw(self, surface):
-        surface.blit(self.surface, dest = (self.x, self.y))
-    
+        if self.spec["ocupation"] == 1:
+            surface.blit(self.surface, dest = (self.x, self.y))
+        else: 
+            pass
+
     def update(self, dx):
         self.x += dx
         if self.x > CAMERA_W:
